@@ -1,4 +1,6 @@
-import { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, ShadingType } from 'docx';
+import { Document, Packer, Paragraph, Table, TableRow, TableCell, WidthType, AlignmentType, ShadingType, Header, ImageRun, TextRun } from 'docx';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export class DocumentGenerator {
     private document: Document;
@@ -15,8 +17,8 @@ export class DocumentGenerator {
     public createTableWithSections(): void {
         const table = new Table({
             width: {
-                size: 100,
-                type: WidthType.PERCENTAGE,
+                size: 7.56 * 1440, // Convert inches to twips (1 inch = 1440 twips)
+                type: WidthType.DXA,
             },
             rows: [
                 // To
@@ -46,9 +48,108 @@ export class DocumentGenerator {
             ],
         });
 
+        // Create header with a table for alignment
+        const imagePath = path.resolve(__dirname, '../images/google-placeholder.png');
+        const imageData = fs.readFileSync(imagePath);
+        
+        const headerTable = new Table({
+            width: {
+                size: 100,
+                type: WidthType.PERCENTAGE,
+            },
+            borders: {
+                top: { style: 'single', size: 1, color: 'FFFFFF' },
+                bottom: { style: 'single', size: 1, color: 'FFFFFF' },
+                left: { style: 'single', size: 1, color: 'FFFFFF' },
+                right: { style: 'single', size: 1, color: 'FFFFFF' }
+            },
+            rows: [
+                new TableRow({
+                    children: [
+                        new TableCell({
+                            width: {
+                                size: 50,
+                                type: WidthType.PERCENTAGE,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new ImageRun({
+                                            type: "png",
+                                            data: imageData,
+                                            transformation: {
+                                                width: 150,
+                                                height: 51
+                                            }
+                                        })
+                                    ],
+                                    alignment: AlignmentType.LEFT
+                                })
+                            ],
+                            borders: {
+                                top: { style: 'single', size: 1, color: 'FFFFFF' },
+                                bottom: { style: 'single', size: 1, color: 'FFFFFF' },
+                                left: { style: 'single', size: 1, color: 'FFFFFF' },
+                                right: { style: 'single', size: 1, color: 'FFFFFF' }
+                            }
+                        }),
+                        new TableCell({
+                            width: {
+                                size: 50,
+                                type: WidthType.PERCENTAGE,
+                            },
+                            children: [
+                                new Paragraph({
+                                    children: [
+                                        new TextRun({
+                                            text: "Internal Memo",
+                                            color: "c4995b",
+                                            size: 28 // 14pt = 28 half-points
+                                        })
+                                    ],
+                                    alignment: AlignmentType.RIGHT,
+                                    spacing: {
+                                        before: 220 // Add space before the text to lower its position
+                                    }
+                                })
+                            ],
+                            borders: {
+                                top: { style: 'single', size: 1, color: 'FFFFFF' },
+                                bottom: { style: 'single', size: 1, color: 'FFFFFF' },
+                                left: { style: 'single', size: 1, color: 'FFFFFF' },
+                                right: { style: 'single', size: 1, color: 'FFFFFF' }
+                            }
+                        }),
+                    ],
+                }),
+            ],
+        });
+
         this.document = new Document({
             sections: [{
-                properties: {},
+                properties: {
+                    page: {
+                        margin: {
+                            top: 1440, // 1 inch
+                            right: 1080, // 0.75 inch (larger right margin)
+                            bottom: 1440, // 1 inch
+                            left: 504, // 0.35 inch (smaller left margin)
+                        },
+                    },
+                },
+                headers: {
+                    default: new Header({
+                        children: [
+                            headerTable,
+                            // Add empty paragraph to create gap
+                            new Paragraph({
+                                spacing: {
+                                    after: 150 // Increase gap between header and document
+                                }
+                            })
+                        ],
+                    }),
+                },
                 children: [table]
             }]
         });
@@ -138,6 +239,11 @@ export class DocumentGenerator {
                                                                         size: 50,
                                                                         type: WidthType.PERCENTAGE,
                                                                     },
+                                                                    shading: {
+                                                                        type: ShadingType.CLEAR,
+                                                                        color: "F2F2F2",
+                                                                        fill: "F2F2F2"
+                                                                    },
                                                                     children: [new Paragraph("CMS No.")]
                                                                 }),
                                                                 new TableCell({
@@ -155,6 +261,11 @@ export class DocumentGenerator {
                                                                     width: {
                                                                         size: 50,
                                                                         type: WidthType.PERCENTAGE,
+                                                                    },
+                                                                    shading: {
+                                                                        type: ShadingType.CLEAR,
+                                                                        color: "F2F2F2",
+                                                                        fill: "F2F2F2"
                                                                     },
                                                                     children: [new Paragraph("Date")]
                                                                 }),
@@ -202,8 +313,7 @@ export class DocumentGenerator {
                         type: WidthType.PERCENTAGE,
                     },
                     children: [
-                        new Paragraph("☐ Agree                                    ☐ Disagree"),
-                        new Paragraph("☐ Other"),
+                        new Paragraph("Placeholder text"),
                     ],
                 }),
             ],
@@ -231,8 +341,53 @@ export class DocumentGenerator {
                         type: WidthType.PERCENTAGE,
                     },
                     children: [
-                        new Paragraph("Signature:"),
-                        new Paragraph("•"),
+                        // Create a nested table for the options
+                        new Table({
+                            width: {
+                                size: 100,
+                                type: WidthType.PERCENTAGE,
+                            },
+                            rows: [
+                                // First row for Agree/Disagree
+                                new TableRow({
+                                    children: [
+                                        new TableCell({
+                                            children: [
+                                                new Paragraph("☐ Agree                                         ☐ Disagree"),
+                                            ],
+                                            borders: {
+                                                top: { style: 'none' },
+                                                right: { style: 'none' },
+                                                left: { style: 'none' },
+                                                bottom: { style: 'single', size: 1, color: 'auto' }
+                                            }
+                                        })
+                                    ]
+                                }),
+                                // Second row for Other and Signature
+                                new TableRow({
+                                    children: [
+                                        new TableCell({
+                                            children: [
+                                                new Paragraph("☐ Other"),
+                                                new Paragraph(""),
+                                                new Paragraph(""),
+                                                new Paragraph(""),
+                                                new Paragraph("Signature:"),
+                                                new Paragraph(""),
+                                                new Paragraph(""),
+                                            ],
+                                            borders: {
+                                                top: { style: 'none' },
+                                                right: { style: 'none' },
+                                                left: { style: 'none' },
+                                                bottom: { style: 'none' }
+                                            }
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
                     ],
                 }),
             ],
@@ -268,9 +423,10 @@ export class DocumentGenerator {
                             rows: [
                                 new TableRow({
                                     children: [
+                                        // First column (50%)
                                         new TableCell({
                                             width: {
-                                                size: 50,
+                                                size: 30,
                                                 type: WidthType.PERCENTAGE,
                                             },
                                             children: [
@@ -280,6 +436,7 @@ export class DocumentGenerator {
                                                 new Paragraph("- Immediate"),
                                             ],
                                         }),
+                                        // Second column (50%)
                                         new TableCell({
                                             width: {
                                                 size: 50,
@@ -294,16 +451,22 @@ export class DocumentGenerator {
                                                     rows: [
                                                         new TableRow({
                                                             children: [
+                                                                // Ensure both nested columns are equal width (50% each)
                                                                 new TableCell({
                                                                     width: {
-                                                                        size: 50,
+                                                                        size: 30,
                                                                         type: WidthType.PERCENTAGE,
                                                                     },
-                                                                    children: [new Paragraph("Urgency Reasons")]
+                                                                    shading: {
+                                                                        type: ShadingType.CLEAR,
+                                                                        color: "F2F2F2",
+                                                                        fill: "F2F2F2"
+                                                                    },
+                                                                    children: [new Paragraph("Urgency reasons, or consequences for missing the deadline")]
                                                                 }),
                                                                 new TableCell({
                                                                     width: {
-                                                                        size: 50,
+                                                                        size: 70,
                                                                         type: WidthType.PERCENTAGE,
                                                                     },
                                                                     children: [new Paragraph("(filled by the team)")]

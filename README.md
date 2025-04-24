@@ -8,7 +8,6 @@ A TypeScript-based document generator that creates structured Word documents usi
 - Customizable table-based template
 - Support for nested tables and complex layouts
 - Consistent formatting with predefined styles
-- Gray-shaded left column for better readability
 
 ## Prerequisites
 
@@ -79,10 +78,6 @@ The generated document includes the following sections:
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the ISC License - see the LICENSE file for details.
 
 ## Author
 
