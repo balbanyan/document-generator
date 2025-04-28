@@ -1,20 +1,30 @@
 {
   "name": "document-generator",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node src/documentGenerator.ts",
+    "start": "ts-node src/index.ts",
     "build": "tsc",
+    "dev": "ts-node-dev --respawn src/index.ts",
+    "example:custom": "ts-node src/examples/customTemplate.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "docx",
+    "document",
+    "generator",
+    "template"
+  ],
+  "author": "Badr Albanyan",
   "license": "ISC",
-  "description": "",
+  "description": "A TypeScript-based document generator that creates structured Word documents using the docx library",
   "dependencies": {
     "@types/node": "^20.0.0",
     "docx": "^8.0.0",
     "ts-node": "^10.9.0",
     "typescript": "^5.0.0"
+  },
+  "devDependencies": {
+    "ts-node-dev": "^2.0.0"
   }
 }
