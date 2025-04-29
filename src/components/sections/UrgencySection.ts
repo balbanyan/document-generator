@@ -1,7 +1,7 @@
-import { TableRow, TableCell, Table, Paragraph, WidthType, ShadingType } from 'docx';
+import { TableRow, TableCell, Table, Paragraph, WidthType, ShadingType, VerticalAlign, AlignmentType } from 'docx';
 import { Section } from '../../interfaces/Section';
 import { createLabelCell, createBasicCell } from '../../utils/documentUtils';
-import { columnWidths } from '../../styles/tableStyles';
+import { columnWidths, grayBackgroundShading } from '../../styles/tableStyles';
 
 /**
  * Represents the Urgency section of a document
@@ -11,13 +11,6 @@ export class UrgencySection implements Section {
     private reasonsLabel: string;
     private reasonsContent: string;
     private column4Content: string;
-    
-    // Custom column widths for Urgency section
-    private readonly urgencyColumnWidths = {
-        column2: 19.6,
-        column3: 15,
-        column4: 26.7
-    };
 
     /**
      * Creates a new Urgency section
@@ -45,11 +38,23 @@ export class UrgencySection implements Section {
     public generateRow(): TableRow {
         return new TableRow({
             children: [
-                createLabelCell('Urgency and Due\nDate (if applicable)'),
+                // Use standard label cell for column 1 with vertical centering
+                new TableCell({
+                    width: {
+                        size: columnWidths.column1,
+                        type: WidthType.PERCENTAGE,
+                    },
+                    shading: grayBackgroundShading,
+                    verticalAlign: VerticalAlign.CENTER,
+                    children: [new Paragraph({
+                        text: 'Urgency and Due\nDate (if applicable)',
+                        alignment: AlignmentType.CENTER
+                    })],
+                }),
                 // Second column - urgency levels
                 new TableCell({
                     width: {
-                        size: this.urgencyColumnWidths.column2,
+                        size: columnWidths.column2,
                         type: WidthType.PERCENTAGE,
                     },
                     children: this.urgencyLevels.map(level => 
@@ -59,7 +64,7 @@ export class UrgencySection implements Section {
                 // Third column - shaded label and content
                 new TableCell({
                     width: {
-                        size: this.urgencyColumnWidths.column3,
+                        size: columnWidths.column3,
                         type: WidthType.PERCENTAGE,
                     },
                     shading: {
@@ -72,7 +77,7 @@ export class UrgencySection implements Section {
                 // Fourth column - content
                 new TableCell({
                     width: {
-                        size: this.urgencyColumnWidths.column4,
+                        size: columnWidths.column4,
                         type: WidthType.PERCENTAGE,
                     },
                     children: [new Paragraph(this.reasonsContent)]

@@ -57,13 +57,10 @@ export const grayBackgroundShading = {
  * Default column widths
  */
 export const columnWidths = {
-    column1: 25.5, // First column percentage (previously labelColumn)
-    column2: 44.5, // Second column percentage
-    column3: 15,   // Third column percentage (new)
-    column4: 15,   // Fourth column percentage (new)
-    // Keep old names for backwards compatibility
-    labelColumn: 25.5,
-    contentColumn: 44.5
+    column1: 25.5, // First column percentage
+    column2: 32.5, // Second column percentage
+    column3: 10.6, // Third column percentage
+    column4: 31.4  // Fourth column percentage
 };
 
 /**

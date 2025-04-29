@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Table, Paragraph, WidthType, VerticalMergeType, TextRun, UnderlineType } from 'docx';
+import { TableRow, TableCell, Table, Paragraph, WidthType, VerticalMergeType, TextRun, UnderlineType, VerticalAlign, AlignmentType } from 'docx';
 import { Section } from '../../interfaces/Section';
 import { createLabelCell } from '../../utils/documentUtils';
 import { noBorders, horizontalSeparatorBorders, columnWidths, grayBackgroundShading } from '../../styles/tableStyles';
@@ -22,8 +22,12 @@ export class DirectiveSection implements Section {
                         type: WidthType.PERCENTAGE,
                     },
                     shading: grayBackgroundShading,
-                    children: [new Paragraph('Directive')],
-                    verticalMerge: VerticalMergeType.RESTART
+                    verticalAlign: VerticalAlign.CENTER,
+                    verticalMerge: VerticalMergeType.RESTART,
+                    children: [new Paragraph({
+                        text: 'Directive',
+                        alignment: AlignmentType.CENTER
+                    })],
                 }),
                 
                 // Columns 2-4 merged with Agree/Disagree options

@@ -1,4 +1,4 @@
-import { Paragraph, TableCell, TableRow, WidthType } from 'docx';
+import { Paragraph, TableCell, TableRow, WidthType, VerticalAlign, AlignmentType } from 'docx';
 import { columnWidths, grayBackgroundShading } from '../styles/tableStyles';
 
 /**
@@ -37,7 +37,11 @@ export function createLabelCell(label: string): TableCell {
             type: WidthType.PERCENTAGE,
         },
         shading: grayBackgroundShading,
-        children: [new Paragraph(label)],
+        verticalAlign: VerticalAlign.CENTER,
+        children: [new Paragraph({
+            text: label,
+            alignment: AlignmentType.CENTER
+        })],
     });
 }
 

@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Table, Paragraph, WidthType, ShadingType, VerticalAlign, VerticalMergeType } from 'docx';
+import { TableRow, TableCell, Table, Paragraph, WidthType, ShadingType, VerticalAlign, VerticalMergeType, AlignmentType } from 'docx';
 import { Section } from '../../interfaces/Section';
 import { createLabelCell } from '../../utils/documentUtils';
 import { columnWidths, grayBackgroundShading } from '../../styles/tableStyles';
@@ -46,8 +46,12 @@ export class TopicSection implements Section {
                         type: WidthType.PERCENTAGE,
                     },
                     shading: grayBackgroundShading,
-                    children: [new Paragraph('Topic')],
-                    verticalMerge: VerticalMergeType.RESTART
+                    verticalAlign: VerticalAlign.CENTER,
+                    verticalMerge: VerticalMergeType.RESTART,
+                    children: [new Paragraph({
+                        text: 'Topic',
+                        alignment: AlignmentType.CENTER
+                    })],
                 }),
                 
                 // Column 2 - Topic and company info (vertically merged)
